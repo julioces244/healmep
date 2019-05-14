@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ public class ProfileDoctorFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_profile_doctor, container, false);
+        //FloatingActionButton imageView = (FloatingActionButton) view.findViewById(R.id.button_video);
         Button imageView = (Button) view.findViewById(R.id.button_video);
         imageView.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view) {
