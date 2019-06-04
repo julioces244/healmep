@@ -168,7 +168,7 @@
         android:fontFamily="sans-serif"
         android:textStyle="normal|bold"
         android:layout_below="@+id/edittext_dni"
-        android:onClick="gologin"
+        android:onClick="callRegisterDoctor"
         android:text="Registrar"/>
 
 

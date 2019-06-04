@@ -8,6 +8,8 @@
     tools:context=".LoginActivity">
 
 
+
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
@@ -27,7 +29,7 @@
         android:background="@drawable/rounded_edittext"
         android:cursorVisible="true"
         android:textCursorDrawable="@null"
-        android:textSize="20sp"
+        android:textSize="15sp"
         android:textColor="#333333"
         android:drawablePadding="25dp"
         android:hint="Ingrese correo"
@@ -58,7 +60,7 @@
         android:ems="10"
         android:background="@drawable/rounded_edittext_below"
         android:layout_below="@+id/et_email"
-        android:textSize="20sp"
+        android:textSize="15sp"
         android:textColor="#333333"
         android:cursorVisible="true"
         android:drawablePadding="25dp"
@@ -98,5 +100,9 @@
         android:layout_below="@+id/bt_login"
         android:onClick="goregister"
         android:text="Registrar"/>
+
+
+
+
 
 </RelativeLayout>

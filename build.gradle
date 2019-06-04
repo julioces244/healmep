@@ -21,6 +21,9 @@ allprojects {
         flatDir {
             dirs 'libs'
         }
+        maven {
+            url "http://dl.bintray.com/jlmd/maven"
+        }
     }
 }
 
