@@ -15,25 +15,36 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.special.ResideMenu.ResideMenu;
+import com.tecsup.apaza.healmepaciente.Adapters.UsersAdapter;
+import com.tecsup.apaza.healmepaciente.Class.Office;
+import com.tecsup.apaza.healmepaciente.Class.User;
 
 import java.io.IOException;
 import java.util.List;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 import static android.content.Context.LOCATION_SERVICE;
+import static android.support.constraint.Constraints.TAG;
 
 
 public class HomeFragment extends Fragment implements OnMapReadyCallback {
@@ -68,7 +79,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
 
                     Address address = addressList.get(0);
                     LatLng latLng = new LatLng(address.getLatitude(),address.getLongitude());
-                    map.addMarker(new MarkerOptions().position(latLng).title(location));
+                    //map.addMarker(new MarkerOptions().position(latLng).title(location));
                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
                 }
                 return false;
@@ -87,38 +98,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap googleMap){
         map = googleMap;
 
-/*
-        if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-
-        LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        Criteria criteria = new Criteria();
-
-        Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
-        if (location != null)
-        {
-            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
-
-            CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(new LatLng(location.getLatitude(), location.getLongitude()))      // Sets the center of the map to location user
-                    .zoom(17)                   // Sets the zoom
-                    .bearing(90)                // Sets the orientation of the camera to east
-                    .tilt(40)                   // Sets the tilt of the camera to 30 degrees
-                    .build();                   // Creates a CameraPosition from the builder
-            map.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        }*/
-
-        //map.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-
-
         LatLng myPosition;
 
 
@@ -128,9 +107,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             return;
         }
 
+        //MOSTRANDO TODAS LAS UBICACIONES DE CONSULTORIOS EN EL MAPA MARKERS
 
 
-        googleMap.setMyLocationEnabled(true);
+
+
+        map.setMyLocationEnabled(true);
         LocationManager locationManager = (LocationManager) getActivity().getSystemService(LOCATION_SERVICE);
         Criteria criteria = new Criteria();
         String provider = locationManager.getBestProvider(criteria, true);
@@ -148,6 +130,61 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
             CameraUpdate yourLocation = CameraUpdateFactory.newLatLngZoom(coordinate, 17);
             map.animateCamera(yourLocation);
         }
+
+
+
+        ApiService service = ApiServiceGenerator.createService(ApiService.class);
+
+        Call<List<Office>> call = service.getOffices();
+
+        call.enqueue(new Callback<List<Office>>() {
+            @Override
+            public void onResponse(Call<List<Office>> call, Response<List<Office>> response) {
+                try {
+
+                    int statusCode = response.code();
+                    Log.d(TAG, "HTTP status code: " + statusCode);
+
+                    if (response.isSuccessful()) {
+
+                        List<Office> offices = response.body();
+                        //Log.d(TAG, "doctors: " + users);
+
+                        for(Office nada : offices){
+                        UiSettings uiSettings = map.getUiSettings();
+                        uiSettings.setZoomControlsEnabled(true);    // Controles de zoom
+                        uiSettings.setCompassEnabled(true); // Brújula
+
+                            double latitud = Double.parseDouble(nada.getLatitude());
+                            double longitud = Double.parseDouble(nada.getLongitude());
+
+                        LatLng sydney = new LatLng(latitud, longitud);
+                        map.addMarker(new MarkerOptions().position(sydney).title("Marker"));
+                        //map.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+                        //map.animateCamera(CameraUpdateFactory.newLatLngZoom(sydney,11));
+                        }
+
+
+                    } else {
+                        Log.e(TAG, "onError: " + response.errorBody().string());
+                        throw new Exception("Error en el servicio");
+                    }
+
+                } catch (Throwable t) {
+                    try {
+                        Log.e(TAG, "onThrowable: " + t.toString(), t);
+                        Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
+                    }catch (Throwable x){}
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Office>> call, Throwable t) {
+                Log.e(TAG, "onFailure: " + t.toString());
+                Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+
+        });
     }
 
 
@@ -161,21 +198,5 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback {
     }
 
 
-
-//    private void setUpViews() {
-//        MainActivity parentActivity = (MainActivity) getActivity();
-//        resideMenu = parentActivity.getResideMenu();
-//
-//        parentView.findViewById(R.id.btn_open_menu).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                resideMenu.openMenu(ResideMenu.DIRECTION_LEFT);
-//            }
-//        });
-//
-//        // add gesture operation's ignored views
-//        FrameLayout ignored_view = (FrameLayout) parentView.findViewById(R.id.ignored_view);
-//        resideMenu.addIgnoredView(ignored_view);
-//    }
 
 }

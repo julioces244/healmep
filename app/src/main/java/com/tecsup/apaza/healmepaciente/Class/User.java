@@ -14,6 +14,15 @@ public class User {
     private String phone;
     private Date birth_date;
     private String user_type;
+    private Gender gender;
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
 
     public Integer getId() {
         return id;

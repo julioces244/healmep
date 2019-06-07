@@ -44,9 +44,9 @@ public class LoginActivity extends AppCompatActivity {
         // to hide loading
         //anim.hide();
 
-        //Intent intent = new Intent(LoginActivity.this,
-         //       RegisterActivity.class);
-        //startActivity(intent);
+        Intent intent = new Intent(LoginActivity.this,
+                RegisterActivity.class);
+        startActivity(intent);
     }
 
     public void gomainview(View view){

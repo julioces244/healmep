@@ -1,6 +1,8 @@
 package com.tecsup.apaza.healmepaciente;
 
 //import com.tecsup.apaza.healmepaciente.Class.Doctor;
+import com.tecsup.apaza.healmepaciente.Class.Doctor;
+import com.tecsup.apaza.healmepaciente.Class.Office;
 import com.tecsup.apaza.healmepaciente.Class.ResponseMessage;
 import com.tecsup.apaza.healmepaciente.Class.User;
 
@@ -11,10 +13,11 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 public interface ApiService {
 
-    String API_BASE_URL = "http://3.81.8.234";
+    String API_BASE_URL = "http://3.88.147.131";
 
     @GET("api/user")
     Call<List<User>> getUsers();
@@ -33,6 +36,16 @@ public interface ApiService {
     @POST("/api/login")
     Call<ResponseMessage> loginUser(@Field("email") String email,
                                        @Field("password") String password);
+
+
+    @GET("api/office")
+    Call<List<Office>> getOffices();
+
+    @GET("api/doctor")
+    Call<List<Doctor>> getDoctors();
+
+    @GET("api/doctor/{id}")
+    Call<Doctor> showDoctor(@Path("id") Integer id);
 
 
 

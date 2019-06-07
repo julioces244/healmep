@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.tecsup.apaza.healmepaciente.ApiService;
+import com.tecsup.apaza.healmepaciente.Class.Doctor;
 import com.tecsup.apaza.healmepaciente.Class.Office;
 import com.tecsup.apaza.healmepaciente.Class.User;
 import com.tecsup.apaza.healmepaciente.R;
@@ -18,14 +19,14 @@ import java.util.List;
 
 public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> {
 
-    private List<User> users;
+    private List<Doctor> doctors;
 
     public UsersAdapter(){
-        this.users = new ArrayList<>();
+        this.doctors = new ArrayList<>();
     }
 
-    public void setDoctos(List<User> doctors){
-        this.users = doctors;
+    public void setDoctos(List<Doctor> doctors){
+        this.doctors = doctors;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
@@ -51,10 +52,10 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(UsersAdapter.ViewHolder viewHolder, int position) {
 
-        User user = this.users.get(position);
+        Doctor doctor = this.doctors.get(position);
 
-        viewHolder.nameText.setText(user.getName());
-        viewHolder.lastnameText.setText(user.getLastname());
+        viewHolder.nameText.setText(doctor.getUser().getName());
+        viewHolder.lastnameText.setText(doctor.getUser().getLastname());
 
         //String url = ApiService.API_BASE_URL + "/images/" + user.getImagen();
         //Picasso.with(viewHolder.itemView.getContext()).load(url).into(viewHolder.fotoImage);
@@ -63,7 +64,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return this.users.size();
+        return this.doctors.size();
     }
 
 

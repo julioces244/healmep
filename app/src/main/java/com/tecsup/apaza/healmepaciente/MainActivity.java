@@ -105,9 +105,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }else if (view == itemProfile){
             changeFragment(new ProfileFragment());
         }else if (view == itemSearchDoctor){
-            //Intent a = new Intent(this, DoctorListActivity.class);
-            //startActivity(a);
-            changeFragment(new ProfileDoctorFragment());
+            Intent a = new Intent(this, DoctorListActivity.class);
+            startActivity(a);
+            //changeFragment(new ProfileDoctorFragment());
         }else if (view == itemExit){
             Intent intent = new Intent(MainActivity.this,
                     LoginActivity.class);

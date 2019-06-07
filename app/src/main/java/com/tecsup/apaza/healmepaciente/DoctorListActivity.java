@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.tecsup.apaza.healmepaciente.Adapters.UsersAdapter;
 //import com.tecsup.apaza.healmepaciente.Class.Doctor;
+import com.tecsup.apaza.healmepaciente.Class.Doctor;
 import com.tecsup.apaza.healmepaciente.Class.User;
 
 import java.util.List;
@@ -43,11 +44,11 @@ public class DoctorListActivity extends AppCompatActivity {
 
         ApiService service = ApiServiceGenerator.createService(ApiService.class);
 
-        Call<List<User>> call = service.getUsers();
+        Call<List<Doctor>> call = service.getDoctors();
 
-        call.enqueue(new Callback<List<User>>() {
+        call.enqueue(new Callback<List<Doctor>>() {
             @Override
-            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+            public void onResponse(Call<List<Doctor>> call, Response<List<Doctor>> response) {
                 try {
 
                     int statusCode = response.code();
@@ -55,11 +56,11 @@ public class DoctorListActivity extends AppCompatActivity {
 
                     if (response.isSuccessful()) {
 
-                        List<User> users = response.body();
-                        Log.d(TAG, "doctors: " + users);
+                        List<Doctor> doctors = response.body();
+                        Log.d(TAG, "doctors: " + doctors);
 
                         UsersAdapter adapter = (UsersAdapter) doctorsList.getAdapter();
-                        adapter.setDoctos(users);
+                        adapter.setDoctos(doctors);
                         adapter.notifyDataSetChanged();
 
                     } else {
@@ -76,7 +77,7 @@ public class DoctorListActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<List<User>> call, Throwable t) {
+            public void onFailure(Call<List<Doctor>> call, Throwable t) {
                 Log.e(TAG, "onFailure: " + t.toString());
                 Toast.makeText(DoctorListActivity.this, t.getMessage(), Toast.LENGTH_LONG).show();
             }
